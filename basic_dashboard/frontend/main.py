@@ -1,4 +1,15 @@
 from nicegui import ui
+from nicegui.elements.badge import Badge
+
+state = 0
+
+def add(x: int):
+    global state
+    state += x
+
+def add_and_show(badge: Badge, x: int):
+    add(x)
+    badge.set_text(str(state))
 
 @ui.page("/show")
 def show():
@@ -26,6 +37,6 @@ def show():
         with ui.tab_panel('About'):
             ui.label('This is the second tab')
 
-    with ui.button('Click me!', on_click=lambda: badge.set_text(str(int(badge.text) + 1))):
+    with ui.button('Click me!', on_click=lambda: add_and_show(badge, 1)):
         badge = ui.badge('0', color='red').props('floating')
-
+        ui.timer(0.5, callback=lambda: badge.set_text(str(state)))
